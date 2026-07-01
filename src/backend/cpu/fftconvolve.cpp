@@ -11,7 +11,9 @@
 
 #include <Array.hpp>
 #include <common/dispatch.hpp>
+#ifdef USE_MKL
 #include <fftw3.h>
+#endif
 #include <kernel/fftconvolve.hpp>
 #include <queue.hpp>
 #include <af/dim4.hpp>
@@ -38,6 +40,7 @@ using reorderFunc = std::function<void(
 template<typename T>
 Array<T> fftconvolve(Array<T> const& signal, Array<T> const& filter,
                      const bool expand, AF_BATCH_KIND kind, const int rank) {
+#ifdef USE_MKL
     using convT = typename std::conditional<std::is_integral<T>::value ||
                                                 std::is_same<T, float>::value,
                                             float, double>::type;
@@ -197,6 +200,14 @@ Array<T> fftconvolve(Array<T> const& signal, Array<T> const& filter,
                        paddedFilDims, paddedFilStrides, kind);
 
     return out;
+#else
+    UNUSED(signal);
+    UNUSED(filter);
+    UNUSED(expand);
+    UNUSED(kind);
+    UNUSED(rank);
+    throw std::runtime_error("FFT functions not implemented.");
+#endif
 }
 
 #define INSTANTIATE(T)                                                 \

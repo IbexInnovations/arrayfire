@@ -330,8 +330,8 @@ else()
   target_link_libraries(afcpu
     PRIVATE
       ${CBLAS_LIBRARIES}
-      FFTW::FFTW
-      FFTW::FFTWF
+      # FFTW::FFTW
+      # FFTW::FFTWF
     )
   if(LAPACK_FOUND AND LAPACKE_FOUND)
     target_link_libraries(afcpu PRIVATE LAPACKE::LAPACKE ${LAPACK_LIBRARIES})

@@ -11,7 +11,9 @@
 
 #include <Array.hpp>
 #include <copy.hpp>
+#ifdef USE_MKL
 #include <fftw3.h>
+#endif
 #include <platform.hpp>
 #include <types.hpp>
 #include <af/dim4.hpp>
@@ -25,6 +27,7 @@ using std::array;
 namespace arrayfire {
 namespace cpu {
 
+#ifdef USE_MKL
 template<typename T>
 struct fftw_transform;
 
@@ -66,6 +69,7 @@ TRANSFORM_REAL(fftwf, cfloat, float, r2c)
 TRANSFORM_REAL(fftw, cdouble, double, r2c)
 TRANSFORM_REAL(fftwf, float, cfloat, c2r)
 TRANSFORM_REAL(fftw, double, cdouble, c2r)
+#endif
 
 inline array<int, AF_MAX_DIMS> computeDims(const int rank, const dim4 &idims) {
     array<int, AF_MAX_DIMS> retVal = {};
@@ -77,6 +81,7 @@ void setFFTPlanCacheSize(size_t numPlans) { UNUSED(numPlans); }
 
 template<typename T>
 void fft_inplace(Array<T> &in, const int rank, const bool direction) {
+#ifdef USE_MKL
     auto func = [=](Param<T> in, const af::dim4 iDataDims) {
         const af::dim4 idims = in.dims();
 
@@ -106,10 +111,17 @@ void fft_inplace(Array<T> &in, const int rank, const bool direction) {
         transform.destroy(plan);
     };
     getQueue().enqueue(func, in, in.getDataDims());
+#else
+    UNUSED(in);
+    UNUSED(rank);
+    UNUSED(direction);
+    throw std::runtime_error("FFT functions not implemented.");
+#endif
 }
 
 template<typename Tc, typename Tr>
 Array<Tc> fft_r2c(const Array<Tr> &in, const int rank) {
+#if USE_MKL
     dim4 odims    = in.dims();
     odims[0]      = odims[0] / 2 + 1;
     Array<Tc> out = createEmptyArray<Tc>(odims);
@@ -149,10 +161,16 @@ Array<Tc> fft_r2c(const Array<Tr> &in, const int rank) {
     getQueue().enqueue(func, out, out.getDataDims(), in, in.getDataDims());
 
     return out;
+#else
+    UNUSED(in);
+    UNUSED(rank);
+    throw std::runtime_error("FFT functions not implemented.");
+#endif
 }
 
 template<typename Tr, typename Tc>
 Array<Tr> fft_c2r(const Array<Tc> &in, const dim4 &odims, const int rank) {
+#ifdef USE_MKL
     Array<Tr> out = createEmptyArray<Tr>(odims);
 
     auto func = [=](Param<Tr> out, const af::dim4 oDataDims, CParam<Tc> in,
@@ -196,23 +214,16 @@ Array<Tr> fft_c2r(const Array<Tc> &in, const dim4 &odims, const int rank) {
         transform.destroy(plan);
     };
 
-#ifdef USE_MKL
     getQueue().enqueue(func, out, out.getDataDims(), in, in.getDataDims(),
                        odims);
-#else
-    if (rank > 1 || odims.ndims() > 1) {
-        // FFTW does not have a input preserving algorithm for multidimensional
-        // c2r FFTs
-        Array<Tc> in_ = copyArray<Tc>(in);
-        getQueue().enqueue(func, out, out.getDataDims(), in_, in.getDataDims(),
-                           odims);
-    } else {
-        getQueue().enqueue(func, out, out.getDataDims(), in, in.getDataDims(),
-                           odims);
-    }
-#endif
 
     return out;
+#else
+    UNUSED(in);
+    UNUSED(odims);
+    UNUSED(rank);
+    throw std::runtime_error("FFT functions not implemented.");
+#endif
 }
 
 #define INSTANTIATE(T) \
