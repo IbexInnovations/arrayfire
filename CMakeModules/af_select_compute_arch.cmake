@@ -127,22 +127,19 @@ endif()
 
 list(APPEND CUDA_COMMON_GPU_ARCHITECTURES "${_CUDA_MAX_COMMON_ARCHITECTURE}")
 
-# Check with: cmake -DCUDA_VERSION=7.0 -P select_compute_arch.cmake
-if(DEFINED CMAKE_SCRIPT_MODE_FILE)
-  include(CMakePrintHelpers)
-  cmake_print_variables(CUDA_KNOWN_GPU_ARCHITECTURES)
-  cmake_print_variables(CUDA_COMMON_GPU_ARCHITECTURES)
-  cmake_print_variables(CUDA_LIMIT_GPU_ARCHITECTURE)
-  cmake_print_variables(CUDA_ALL_GPU_ARCHITECTURES)
-endif()
+include(CMakePrintHelpers)
+cmake_print_variables(CUDA_KNOWN_GPU_ARCHITECTURES)
+cmake_print_variables(CUDA_COMMON_GPU_ARCHITECTURES)
+cmake_print_variables(CUDA_LIMIT_GPU_ARCHITECTURE)
+cmake_print_variables(CUDA_ALL_GPU_ARCHITECTURES)
 
 
 ################################################################################################
 # A function for automatic detection of GPUs installed  (if autodetection is enabled)
 # Usage:
-#   CUDA_DETECT_INSTALLED_GPUS(OUT_VARIABLE)
+#   AF_CUDA_DETECT_INSTALLED_GPUS(OUT_VARIABLE)
 #
-function(CUDA_DETECT_INSTALLED_GPUS OUT_VARIABLE)
+function(AF_CUDA_DETECT_INSTALLED_GPUS OUT_VARIABLE)
   if(NOT CUDA_GPU_DETECT_OUTPUT)
     if(CMAKE_CUDA_COMPILER_LOADED) # CUDA as a language
       set(file "${PROJECT_BINARY_DIR}/detect_cuda_compute_capabilities.cu")
@@ -212,7 +209,7 @@ endfunction()
 # Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
 # Usage:
 #   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
-function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
+function(AF_CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
   set(CUDA_ARCH_LIST "${ARGN}")
 
   if("X${CUDA_ARCH_LIST}" STREQUAL "X" )
@@ -227,7 +224,7 @@ function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
   elseif("${CUDA_ARCH_LIST}" STREQUAL "Common")
     set(CUDA_ARCH_LIST ${CUDA_COMMON_GPU_ARCHITECTURES})
   elseif("${CUDA_ARCH_LIST}" STREQUAL "Auto")
-    CUDA_DETECT_INSTALLED_GPUS(CUDA_ARCH_LIST)
+    AF_CUDA_DETECT_INSTALLED_GPUS(CUDA_ARCH_LIST)
     message(STATUS "Autodetected CUDA architecture(s): ${CUDA_ARCH_LIST}")
   endif()
 

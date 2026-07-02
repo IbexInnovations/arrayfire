@@ -15,10 +15,10 @@ if(AF_WITH_CUDNN)
   dependency_check(cuDNN_FOUND "CUDNN not found.")
 endif()
 
+include(af_select_compute_arch)
 include(AFcuda_helpers)
 include(FileToString)
 include(InternalUtils)
-include(select_compute_arch)
 
 # Remove cublas_device library which is no longer included with the cuda
 # toolkit. Fixes issues with older CMake versions

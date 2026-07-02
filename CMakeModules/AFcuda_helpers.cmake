@@ -6,7 +6,7 @@
 # http://arrayfire.com/licenses/BSD-3-Clause
 
 find_program(NVPRUNE NAMES nvprune)
-cuda_select_nvcc_arch_flags(cuda_architecture_flags ${CUDA_architecture_build_targets})
+af_cuda_select_nvcc_arch_flags(cuda_architecture_flags ${CUDA_architecture_build_targets})
 set(cuda_architecture_flags ${cuda_architecture_flags} CACHE INTERNAL "CUDA compute flags" FORCE)
 set(cuda_architecture_flags_readable ${cuda_architecture_flags_readable} CACHE INTERNAL "Readable CUDA compute flags" FORCE)
 
