@@ -246,7 +246,7 @@ if(TARGET spdlog::spdlog OR AF_WITH_EXTERNAL_PACKAGES_ONLY)
 else()
   af_dep_check_and_populate(${spdlog_prefix}
     URI https://github.com/gabime/spdlog.git
-    REF v1.7.0
+    REF v1.15.0
   )
   add_subdirectory(${${spdlog_prefix}_SOURCE_DIR} ${${spdlog_prefix}_BINARY_DIR} EXCLUDE_FROM_ALL)
 
@@ -259,6 +259,7 @@ else()
   if(AF_WITH_SPDLOG_HEADER_ONLY)
     set_target_properties(af_spdlog
       PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS "FMT_HEADER_ONLY=1"
         INTERFACE_LINK_LIBRARIES "spdlog_header_only")
   else()
     set_target_properties(spdlog
