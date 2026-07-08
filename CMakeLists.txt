@@ -270,7 +270,7 @@ else()
   add_library(af_spdlog INTERFACE)
   af_dep_check_and_populate(${spdlog_prefix}
     URI https://github.com/gabime/spdlog.git
-    REF v1.9.2
+    REF v1.15.0
   )
 
   if(TARGET fmt::fmt)
