@@ -37,8 +37,15 @@ function(arrayfire_get_cuda_cxx_flags cuda_flags)
     set(flags -Xcompiler /wd4251
               -Xcompiler /wd4068
               -Xcompiler /wd4275
+              -Xcompiler /wd4625
+              -Xcompiler /wd4626
+              -Xcompiler /wd4711
+              -Xcompiler /wd4820
+              -Xcompiler /wd5026
+              -Xcompiler /wd5027
               -Xcompiler /bigobj
               -Xcompiler /EHsc
+              -Xcompiler /utf-8
               --expt-relaxed-constexpr)
     if(CMAKE_GENERATOR MATCHES "Ninja")
       set(flags ${flags} -Xcompiler /FS)
@@ -75,7 +82,19 @@ function(arrayfire_set_default_cxx_flags target)
   if(MSVC)
     target_compile_options(${target}
       PRIVATE
-        /wd4251 /wd4068 /wd4275 /bigobj /EHsc)
+        /wd4251
+        /wd4068
+        /wd4275
+        /wd4625
+        /wd4626
+        /wd4711
+        /wd4820
+        /wd5026
+        /wd5027
+        /bigobj
+        /EHsc
+        /utf-8
+    )
 
     if(CMAKE_GENERATOR MATCHES "Ninja")
       target_compile_options(${target}
