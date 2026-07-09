@@ -326,6 +326,7 @@ endif()
 
 target_link_libraries(af_cuda_static_cuda_library
   PUBLIC
+    af_spdlog
     Boost::boost)
 
 if(UNIX AND AF_WITH_STATIC_CUDA_NUMERIC_LIBS)
