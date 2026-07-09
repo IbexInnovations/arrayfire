@@ -60,10 +60,17 @@ function(arrayfire_set_default_cxx_flags target)
                                           /wd4668
                                           /wd4710
                                           /wd4505
+                                          /wd4625
+                                          /wd4626
+                                          /wd4711
+                                          /wd4820
+                                          /wd5026
+                                          /wd5027
                                           /we5038
                                           /bigobj
                                           /EHsc
                                           /nologo
+                                          /utf-8
                                           # MSVC incorrectly sets the cplusplus to 199711L even if the compiler supports
                                           # c++11 features. This flag sets it to the correct standard supported by the
                                           # compiler
@@ -81,10 +88,17 @@ function(arrayfire_set_default_cxx_flags target)
                                           /wd4668
                                           /wd4710
                                           /wd4505
+                                          /wd4625
+                                          /wd4626
+                                          /wd4711
+                                          /wd4820
+                                          /wd5026
+                                          /wd5027
                                           /we5038
                                           /bigobj
                                           /EHsc
                                           /nologo
+                                          /utf-8
                                           # MSVC incorrectly sets the cplusplus to 199711L even if the compiler supports
                                           # c++11 features. This flag sets it to the correct standard supported by the
                                           # compiler

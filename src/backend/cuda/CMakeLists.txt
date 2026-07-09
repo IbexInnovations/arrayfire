@@ -676,9 +676,16 @@ target_compile_options(afcuda
     $<$<COMPILE_LANGUAGE:CUDA>: $<$<CXX_COMPILER_ID:MSVC>:  -Xcompiler=/wd4251
                                                             -Xcompiler=/wd4068
                                                             -Xcompiler=/wd4275
+                                                            -Xcompiler=/wd4625
+                                                            -Xcompiler=/wd4626
                                                             -Xcompiler=/wd4668
                                                             -Xcompiler=/wd4710
+                                                            -Xcompiler=/wd4711
                                                             -Xcompiler=/wd4505
+                                                            -Xcompiler=/wd4820
+                                                            -Xcompiler=/wd5026
+                                                            -Xcompiler=/wd5027
+                                                            -Xcompiler=/utf-8
                                                             -Xcompiler=/bigobj>>
 )
 
